@@ -28,24 +28,66 @@ logger = logging.getLogger(__name__)
 # Состояния диалога
 SERVICE, CARD, BANK, EMAIL, PHONE = range(5)
 
-# База данных известных сервисов
-SERVICES = {
-    "яндекс": {
-        "name": "Яндекс.Плюс",
-        "cancel_url": "https://plus.yandex.ru/cancel",
-        "instructions": "1. Откройте приложение Яндекс\n2. Профиль → Подписки\n3. Выберите 'Отменить подписку'"
-    },
-    "netflix": {
-        "name": "Netflix",
-        "cancel_url": "https://www.netflix.com/cancelplan",
-        "instructions": "1. Войдите в аккаунт Netflix\n2. Настройки → Отменить подписку"
-    },
-    "spotify": {
-        "name": "Spotify",
-        "cancel_url": "https://www.spotify.com/account/subscription/",
-        "instructions": "1. Войдите в аккаунт Spotify\n2. Профиль → Управление подпиской\n3. Отменить подписку"
-    }
-}
+# Загрузка базы данных
+with open('brokers_database.json', 'r', encoding='utf-8') as f:
+    brokers_db = json.load(f)
+
+# Поиск брокера (регистронезависимый)
+def find_broker(query):
+    results = []
+    for broker in brokers_db['brokers']:
+        if query.lower() in broker['name'].lower():
+            results.append(broker)
+    return results
+
+# Обработка команды /start
+def start(update: Update, context: CallbackContext):
+    update.message.reply_text(
+        "🔍 Введите название брокера или часть названия для поиска:\n"
+        "Пример: `Гивмани`, `Макс Кредит`",
+        parse_mode='Markdown'
+    )
+
+# Обработка текстовых сообщений
+def handle_search(update: Update, context: CallbackContext):
+    query = update.message.text
+    results = find_broker(query)
+    
+    if not results:
+        update.message.reply_text("❌ Брокер не найден. Попробуйте уточнить название.")
+        return
+    
+    if len(results) == 1:
+        send_broker_info(update, results[0])
+    else:
+        keyboard = [
+            [InlineKeyboardButton(broker['name'], callback_data=f"broker_{idx}")]
+            for idx, broker in enumerate(results[:10])  # Ограничение до 10 результатов
+        ]
+        update.message.reply_text(
+            "🔍 Найдено несколько брокеров:",
+            reply_markup=InlineKeyboardMarkup(keyboard)
+        )
+
+# Отправка информации о брокере
+def send_broker_info(update: Update, broker):
+    message = (
+        f"📌 *{broker['name']}*\n\n"
+        f"🔗 Отписаться через ЛК: `{broker['unsubscribe_link'] if broker['unsubscribe_link'] != '–' else 'Нет данных'}`\n"
+        f"📧 Email для отказа: `{broker['email'] if broker['email'] != '–' else 'Нет данных'}`\n"
+        f"📞 Телефон: `{broker['phone'] if broker['phone'] != '–' else 'Нет данных'}`"
+    )
+    if isinstance(update, Update):
+        update.message.reply_text(message, parse_mode='Markdown')
+    else:  # Для CallbackQueryHandler
+        update.callback_query.edit_message_text(message, parse_mode='Markdown')
+
+# Обработка нажатий на кнопки
+def button_handler(update: Update, context: CallbackContext):
+    query = update.callback_query
+    idx = int(query.data.split('_')[1])
+    broker = brokers_db['brokers'][idx]
+    send_broker_info(update, broker)
 
 async def start(update: Update, context: CallbackContext) -> int:
     """Начало диалога."""
