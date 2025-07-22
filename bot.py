@@ -1,5 +1,6 @@
 import logging
 import json
+import httpx
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
     Application,
@@ -12,20 +13,147 @@ from telegram.ext import (
 from dotenv import load_dotenv
 import os
 
-# Настройка логгирования
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    level=logging.INFO
-)
-logger = logging.getLogger(__name__)
-
-# Загрузка переменных окружения
+# Настройки
 load_dotenv()
 TINKOFF_API_KEY = os.getenv("TINKOFF_API_KEY")
 TOKEN = os.getenv("BOT_TOKEN")
 PAYMENT_TOKEN = os.getenv("PAYMENT_TOKEN")
 DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
 
+# Логирование
+logging.basicConfig(
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    level=logging.INFO
+)
+logger = logging.getLogger(__name__)
+
+# Загрузка базы
+def load_brokers_db():
+    try:
+        with open('brokers_database.json', 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        logger.error(f"Ошибка загрузки базы: {e}")
+        return {"brokers": []}
+
+brokers_db = load_brokers_db()
+
+# DeepSeek помощник
+async def get_ai_help(query: str, context: str) -> str:
+    """Получение краткой подсказки от DeepSeek"""
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                "https://api.deepseek.com/v1/chat/completions",
+                headers={"Authorization": f"Bearer {DEEPSEEK_API_KEY}"},
+                json={
+                    "model": "deepseek-chat",
+                    "messages": [
+                        {"role": "system", "content": "Давай краткие ответы (1-3 предложения)"},
+                        {"role": "user", "content": f"{query}\n\nКонтекст: {context}"}
+                    ],
+                    "max_tokens": 100
+                },
+                timeout=10
+            )
+            return response.json()['choices'][0]['message']['content']
+    except Exception as e:
+        logger.error(f"DeepSeek error: {e}")
+        return ""
+
+# Основные handlers
+async def start(update: Update, context: CallbackContext) -> None:
+    await update.message.reply_text(
+        "🔍 Введите название брокера или вопрос:\n"
+        "Пример: 'Как отписаться от Гивмани?'"
+    )
+
+async def handle_message(update: Update, context: CallbackContext) -> None:
+    text = update.message.text
+    
+    if any(keyword in text.lower() for keyword in ['как', 'почему', 'что делать']):
+        # Запрос к DeepSeek для краткого совета
+        advice = await get_ai_help(text, "Отписка от финансовых сервисов")
+        if advice:
+            await update.message.reply_text(f"💡 Совет: {advice}")
+        return
+    
+    # Поиск брокера
+    results = [b for b in brokers_db["brokers"] if text.lower() in b["name"].lower()]
+    
+    if not results:
+        await update.message.reply_text("❌ Брокер не найден. Уточните название.")
+        return
+    
+    await show_options(update, results[0] if len(results) == 1 else None, results)
+
+async def show_options(update: Update, broker: dict | None, results: list = None):
+    if not broker and results:
+        keyboard = [
+            [InlineKeyboardButton(b['name'], callback_data=f"select_{i}")]
+            for i, b in enumerate(results[:5])
+        ]
+        await update.message.reply_text(
+            "Выберите брокера:",
+            reply_markup=InlineKeyboardMarkup(keyboard)
+        )
+        return
+    
+    keyboard = [
+        [InlineKeyboardButton("💰 Автоотписка (149₽)", callback_data=f"paid_{broker['name']}")],
+        [InlineKeyboardButton("🆓 Инструкция", callback_data=f"free_{broker['name']}")],
+        [InlineKeyboardButton("❓ Помощь", callback_data=f"help_{broker['name']}")]
+    ]
+    
+    await update.message.reply_text(
+        f"📌 {broker['name']} - выберите действие:",
+        reply_markup=InlineKeyboardMarkup(keyboard)
+    )
+
+# Обработчики кнопок
+async def handle_button(update: Update, context: CallbackContext) -> None:
+    query = update.callback_query
+    await query.answer()
+    
+    action, broker_name = query.data.split('_', 1)
+    broker = next(b for b in brokers_db['brokers'] if b['name'] == broker_name)
+    
+    if action == "paid":
+        payment_url = f"https://payment.tinkoff.ru/?apiKey={TINKOFF_API_KEY}&amount=14900"
+        text = (
+            f"✅ Автоотписка от {broker_name}\n\n"
+            f"Оплатите [149₽]({payment_url}) и мы все сделаем за вас"
+        )
+    elif action == "free":
+        text = (
+            f"📋 Инструкция для {broker_name}:\n"
+            f"1. Отписка: {broker['unsubscribe_link'] or 'через ЛК'}\n"
+            f"2. Email: {broker['email'] or 'нет'}\n"
+            f"3. Телефон: {broker['phone'] or 'нет'}"
+        )
+    elif action == "help":
+        advice = await get_ai_help(f"Как отписаться от {broker_name}?", 
+                                 f"Данные: {broker}")
+        text = f"💡 По {broker_name}:\n{advice or 'Нет дополнительной информации'}"
+    
+    await query.edit_message_text(
+        text,
+        parse_mode='Markdown',
+        reply_markup=InlineKeyboardMarkup([
+            [InlineKeyboardButton("🔙 Назад", callback_data=f"back_{broker_name}")]
+        ])
+    )
+
+def main() -> None:
+    app = Application.builder().token(TOKEN).build()
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+    app.add_handler(CallbackQueryHandler(handle_button, pattern="^(paid|free|help|select)_"))
+    app.add_handler(CallbackQueryHandler(lambda u,c: show_options(u, None), pattern="^back_"))
+    app.run_polling()
+
+if __name__ == "__main__":
+    main()
 # Загрузка базы данных
 def load_brokers_db():
     try:
