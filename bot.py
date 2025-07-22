@@ -85,6 +85,20 @@ async def update_payment_status(user_id, status):
         await db.commit()
 
 async def ask_deepseek(prompt):
+    system_prompt = """
+    Ты - помощник в боте для отмены подписок. Твоя задача:
+    1. Помогать пользователям правильно заполнять форму отписки
+    2. Корректировать некорректные вводы данных
+    3. Отвечать ТОЛЬКО на вопросы, связанные с отпиской от услуг
+    
+    Правила:
+    - Отвечай кратко (1-2 предложения)
+    - Не отвечай на вопросы не по теме
+    - Сообщи, если вопрос не относится к отписке
+    - Используй формальный и вежливый тон
+    - Поправляй ошибки в данных пользователя
+    """
+    
     try:
         response = requests.post(
             "https://api.deepseek.com/v1/chat/completions",
@@ -94,17 +108,46 @@ async def ask_deepseek(prompt):
             },
             json={
                 "model": "deepseek-chat",
-                "messages": [{"role": "user", "content": prompt}],
-                "temperature": 0.7,
-                "max_tokens": 500,
+                "messages": [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": prompt}
+                ],
+                "temperature": 0.3,  # Уменьшаем "креативность"
+                "max_tokens": 150,   # Ограничиваем длину ответа
             },
-            timeout=20
+            timeout=10
         )
         response.raise_for_status()
-        return response.json()["choices"][0]["message"]["content"]
+        answer = response.json()["choices"][0]["message"]["content"]
+        
+        # Фильтруем ответы, не связанные с темой
+        if "не по теме" in answer.lower() or "не относится" in answer.lower():
+            return "Этот вопрос не относится к отписке от услуг. Пожалуйста, задавайте вопросы только по теме отмены подписок."
+        return answer
+        
     except Exception as e:
         logger.error(f"DeepSeek API error: {e}")
-        return "Извините, произошла ошибка. Попробуйте позже."
+        return "Произошла ошибка. Пожалуйста, продолжайте заполнение формы."
+
+async def handle_free_text(update: Update, context: CallbackContext):
+    user_message = update.message.text
+    user_id = update.message.from_user.id
+    
+    if context.user_data.get('contact_admin'):
+        await context.bot.send_message(GROUP_ID, f"✉️ Сообщение от пользователя {user_id}:\n{user_message}")
+        await update.message.reply_text("✅ Ваше сообщение отправлено администратору.")
+        context.user_data['contact_admin'] = False
+        return
+    
+    # Если пользователь в процессе заполнения формы, перенаправляем его
+    current_state = await context.application.persistence.get_conversation(update.effective_chat.id)
+    if current_state in [FIO, SOURCE, BANK, CARD, EMAIL, PHONE]:
+        await update.message.reply_text("Пожалуйста, продолжайте заполнение формы.")
+        return
+    
+    # Обработка только тематических вопросов
+    response = await ask_deepseek(user_message)
+    await update.message.reply_text(response)
 
 async def start(update: Update, context: CallbackContext):
     keyboard = [
