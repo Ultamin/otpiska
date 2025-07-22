@@ -14,7 +14,9 @@ import os
 
 # Загрузка переменных окружения
 load_dotenv()
-TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+TOKEN = os.getenv("BOT_TOKEN")
+PAYMENT_TOKEN = os.getenv("PAYMENT_TOKEN")
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
 
 # Настройка логгирования
 logging.basicConfig(
