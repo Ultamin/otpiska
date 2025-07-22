@@ -1,0 +1,1614 @@
+import json
+
+brokers_db = {
+    "brokers": [
+        {
+            "name": "Givemoney (Гивмани)",
+            "unsubscribe_link": "givemoney.su/lk",
+            "email": "support@fedoro.su",
+            "phone": "74952120768"
+        },
+        {
+            "name": "L-Finance (Л финанс)",
+            "unsubscribe_link": "—",
+            "email": "info@lfinanc.ru, info@e-zaim.com",
+            "phone": "88002504656"
+        },
+        {
+            "name": "Sravni.ru (Сравни.ру)",
+            "unsubscribe_link": "—",
+            "email": "help@sravni.ru",
+            "phone": "88007073902"
+        },
+        {
+            "name": "Merechko (Мережко, Плисков)",
+            "unsubscribe_link": "pliskov.ru",
+            "email": "info@pliskov.ru",
+            "phone": "78452398880"
+        },
+        {
+            "name": "Proleads (Пролидс)",
+            "unsubscribe_link": "proleads.su/support/lk",
+            "email": "info@proleads.su",
+            "phone": "88002222205"
+        },
+        {
+            "name": "Glav-Zaim (Вам Одобрено)",
+            "unsubscribe_link": "glav-zaim.ru/lk",
+            "email": "client@glav-zaim.ru",
+            "phone": "88002222205"
+        },
+        {
+            "name": "Beri-tut.credit (Бери тут)",
+            "unsubscribe_link": "beri-tut.credit/lk/login",
+            "email": "client@beri-tut.credit",
+            "phone": "88002222205"
+        },
+        {
+            "name": "Umoneys (У Натальи Петровны)",
+            "unsubscribe_link": "umoneys.ru/lk/login",
+            "email": "client@umoneys.ru",
+            "phone": "88002222205"
+        },
+        {
+            "name": "Max Credit (Твой кредит, Макс Кредит)",
+            "unsubscribe_link": "max.credit",
+            "email": "hello@max.credit",
+            "phone": "88005559532"
+        },
+        {
+            "name": "Zaimark (Займарк)",
+            "unsubscribe_link": "zaimark.ru/unsubscribe",
+            "email": "info@zaimark.ru",
+            "phone": "74953745729"
+        },
+        {
+            "name": "Ryabina Credit (Рябина, RCredit)",
+            "unsubscribe_link": "ryabina.uno/payment/unsubscribe",
+            "email": "support@ryabina.uno",
+            "phone": "78002228429"
+        },
+        {
+            "name": "Monebo (Монебо), Zaimy24 (Займы 24)",
+            "unsubscribe_link": "monebo.ru",
+            "email": "otkaz@monb.su",
+            "phone": "79090068060"
+        },
+        {
+            "name": "Dengisrazy.ru (Деньги сразу)",
+            "unsubscribe_link": "dengisrazy.ru/cabinet/login",
+            "email": "help@nfds.ru",
+            "phone": "88007004348"
+        },
+        {
+            "name": "Zheldorzaim (Желдорзайм)",
+            "unsubscribe_link": "zheldorzaim.ru",
+            "email": "help@zheldorzaim.ru",
+            "phone": "88005509512"
+        },
+        {
+            "name": "Nadodeneg (Кватро)",
+            "unsubscribe_link": "nadodeneg.ru",
+            "email": "docs@nadodeneg.ru",
+            "phone": "88002220224"
+        },
+        {
+            "name": "МКК Евраз (Ezaimo, Oblzaim и др.)",
+            "unsubscribe_link": "–",
+            "email": "–",
+            "phone": "74996539400"
+        },
+        {
+            "name": "Gusta Credit (Густа Кредит)",
+            "unsubscribe_link": "gustacredit.ru/unsubscribe",
+            "email": "support@gustacredit.ru",
+            "phone": "74951502239"
+        },
+        {
+            "name": "Finfoks7 (Finfoks7, Финфокс7)",
+            "unsubscribe_link": "finfox7.ru/lk/login",
+            "email": "vozvrat@multypolis.ru",
+            "phone": "88003333267"
+        },
+        {
+            "name": "Capitan.money (Капитан Мани, Займ Даром)",
+            "unsubscribe_link": "capitan.money",
+            "email": "support@capitan.money",
+            "phone": "78002228429"
+        },
+        {
+            "name": "RusZaimRazvitie.ru (РусЗаймРазвитие)",
+            "unsubscribe_link": "ruszaimrazvitie.ru/payment/unsubscribe",
+            "email": "support@ruszaimrazvitie.ru",
+            "phone": "78002228429"
+        },
+        {
+            "name": "Jomin (Джомин)",
+            "unsubscribe_link": "jomin.ru/unsubscribe",
+            "email": "info@jomin.ru",
+            "phone": "78452428830"
+        },
+        {
+            "name": "E-finmarket.ru (Е-финмаркет)",
+            "unsubscribe_link": "e-finmarket.ru/unsubscribe",
+            "email": "support@efinmarket.pw",
+            "phone": "84991124367"
+        },
+        {
+            "name": "Cashdaddy (КэшДэдди)",
+            "unsubscribe_link": "cashdaddy.ru/unsubscribe",
+            "email": "support@cashdaddy.ru",
+            "phone": "74952601817"
+        },
+        {
+            "name": "You center (Юцентр)",
+            "unsubscribe_link": "youcenter.ru/pa",
+            "email": "client@youcenter.ru",
+            "phone": "74951289523"
+        },
+        {
+            "name": "Zaymikus.ru (Займикус)",
+            "unsubscribe_link": "zaymikus.online/payment/unsubscribe",
+            "email": "support@zaymikus.online",
+            "phone": "74950110043"
+        },
+        {
+            "name": "Kredius (Кредиус)",
+            "unsubscribe_link": "kredius.org/payment/unsubscribe",
+            "email": "support@kredius.org",
+            "phone": "78007754793"
+        },
+        {
+            "name": "Everwell (Эвервэлл)",
+            "unsubscribe_link": "everwell.ru/pa",
+            "email": "client@everwell.ru",
+            "phone": "74992869436"
+        },
+        {
+            "name": "Finvin (Финвин)",
+            "unsubscribe_link": "finvin.ru/login",
+            "email": "support@finvin.ru",
+            "phone": "74951338607"
+        },
+        {
+            "name": "Microzaym.site (Микрозайм сайт, Денежка 24)",
+            "unsubscribe_link": "denezhka-24.ru/cancel.php",
+            "email": "support@microzaym.site",
+            "phone": "84999919917"
+        },
+        {
+            "name": "Fazancredit.ru (Фазан кредит)",
+            "unsubscribe_link": "fazancredit.ru/unsubscribe",
+            "email": "help@fazancredit.ru",
+            "phone": "–"
+        },
+        {
+            "name": "Usoseda.ru (У Соседа)",
+            "unsubscribe_link": "usoseda.su/unsubscribe",
+            "email": "support@usoseda.su",
+            "phone": "74958593274"
+        },
+        {
+            "name": "Dengi-rf.ru (Деньги РФ)",
+            "unsubscribe_link": "dengi-rf.ru/unsubscribe/ru",
+            "email": "OlalaIgnat@gmail.com",
+            "phone": "–"
+        },
+        {
+            "name": "Cashlux.ru (Кэш люкс)",
+            "unsubscribe_link": "cashlux.ru/unsubscribe/ru/",
+            "email": "OlalaIgnat@gmail.com",
+            "phone": "–"
+        },
+        {
+            "name": "Kreditka org (Кредитка орг)",
+            "unsubscribe_link": "kreditka.org/unsubscribe",
+            "email": "–",
+            "phone": "–"
+        },
+        {
+            "name": "Tigercredit (Тигр Кредит)",
+            "unsubscribe_link": "tigercredit.ru/unsubscribe",
+            "email": "help@tigercredit.ru",
+            "phone": "–"
+        },
+        {
+            "name": "Credme (Кред Ми)",
+            "unsubscribe_link": "credme.ru/unsubscribe",
+            "email": "support@credme.ru",
+            "phone": "74951214885"
+        },
+        {
+            "name": "Kviza (Квиза)",
+            "unsubscribe_link": "kviza.ru/unsubscribe",
+            "email": "support@kviza.pw",
+            "phone": "84991124072"
+        },
+        {
+            "name": "Kredit-zaimi.ru (Кредит займы)",
+            "unsubscribe_link": "kredit-zaimi.ru/cancel.php",
+            "email": "—",
+            "phone": "73433009239"
+        },
+        {
+            "name": "Berezka (Березка, 10 займов)",
+            "unsubscribe_link": "10zaymov.online/payment/unsubscribe",
+            "email": "support@10zaymov.online",
+            "phone": "78007754793"
+        },
+        {
+            "name": "Oncredi.org (Березка, Онкреди)",
+            "unsubscribe_link": "oncredi.org/payment/unsubscribe",
+            "email": "support@oncredi.org",
+            "phone": "78003332469"
+        },
+        {
+            "name": "iZaim.su (Айзайм)",
+            "unsubscribe_link": "izaim.su/pa",
+            "email": "client@izaim.su",
+            "phone": "74951336548"
+        },
+        {
+            "name": "Zarubas.ru (Зарубас)",
+            "unsubscribe_link": "zarubas.ru/unsubscribe",
+            "email": "support@zarubas.pw",
+            "phone": "74951338612"
+        },
+        {
+            "name": "Kreditnye reshenij (Кредитные решения)",
+            "unsubscribe_link": "–",
+            "email": "–",
+            "phone": "74991136922"
+        },
+        {
+            "name": "Credithit.ru (Кредитхит)",
+            "unsubscribe_link": "credithit.ru/unsubscribe/",
+            "email": "support@credithit.ru",
+            "phone": "74991136922"
+        },
+        {
+            "name": "CashX (Кэш икс)",
+            "unsubscribe_link": "cashx.ru/unsubscribe/",
+            "email": "support@cashx.ru",
+            "phone": "–"
+        },
+        {
+            "name": "Vizaym.ru (Визайм)",
+            "unsubscribe_link": "vizaym.ru/unsubscribe",
+            "email": "info@vizaym.ru",
+            "phone": "78125396843"
+        },
+        {
+            "name": "Malinazaim.ru (Малина займ)",
+            "unsubscribe_link": "malinazaim.ru/unsubscribe",
+            "email": "support@malinazaim.ru",
+            "phone": "88003004832"
+        },
+        {
+            "name": "Malina-money.ru (Малина мани)",
+            "unsubscribe_link": "malina-money.ru",
+            "email": "support@malina-money.ru",
+            "phone": "79965675415"
+        },
+        {
+            "name": "Rublik.su (Рублик)",
+            "unsubscribe_link": "rublik.su/unsubscribe",
+            "email": "clients@rublik.su",
+            "phone": "74954763496"
+        },
+        {
+            "name": "Clickservice.com (Клик Сервис)",
+            "unsubscribe_link": "–",
+            "email": "info@clickservice.com",
+            "phone": "88005508991"
+        },
+        {
+            "name": "Zaimdostavka.ru (MND, Копилочка)",
+            "unsubscribe_link": "zaimdostavka.ru",
+            "email": "support@zaimdostavka.ru",
+            "phone": "78007754793"
+        },
+        {
+            "name": "NaKarty.ru (На Карту)",
+            "unsubscribe_link": "nakarty.ru/pa",
+            "email": "client@NaKarty.ru",
+            "phone": "74959759605"
+        },
+        {
+            "name": "Alfa-Zaym (Альфа займ)",
+            "unsubscribe_link": "alfa-zaym.ru/unsubscribe",
+            "email": "info@alfa-zaym.ru",
+            "phone": "74950033589"
+        },
+        {
+            "name": "Helpikus (Хелпикус)",
+            "unsubscribe_link": "helpikus.ru/unsubscribe",
+            "email": "support@helpikus.ru",
+            "phone": "74951289359"
+        },
+        {
+            "name": "Bezpereplati (Без переплаты, без зарплаты)",
+            "unsubscribe_link": "bezpereplati.ru/payment/unsubscribe",
+            "email": "support@bezpereplati.ru",
+            "phone": "78007757823"
+        },
+        {
+            "name": "Strauscredit (Страус кредит)",
+            "unsubscribe_link": "strauscredit.ru/unsubscribe",
+            "email": "help@strauscredit.ru",
+            "phone": "–"
+        },
+        {
+            "name": "Banklite (Банк лайт)",
+            "unsubscribe_link": "banklite.ru/unsubscribe",
+            "email": "banklite@de-vtek.ru",
+            "phone": "–"
+        },
+        {
+            "name": "Srochnozaym (Срочно займ)",
+            "unsubscribe_link": "srochnozaym.su/unsubscribe",
+            "email": "support@srochnozaym.su",
+            "phone": "88003004832"
+        },
+        {
+            "name": "Gruden (Грудень)",
+            "unsubscribe_link": "zabiray.ru/login",
+            "email": "support@zabiray.ru",
+            "phone": "–"
+        },
+        {
+            "name": "Zaymx (Займ Икс)",
+            "unsubscribe_link": "zaymx.ru/unsubscribe/",
+            "email": "info@zaymx.ru",
+            "phone": "74994990525"
+        },
+        {
+            "name": "3xzaim (Ноль процентов)",
+            "unsubscribe_link": "3xzaim.ru/payment/unsubscribe",
+            "email": "support@3xzaim.ru",
+            "phone": "78007753659"
+        },
+        {
+            "name": "Evazaym (Ева Займ)",
+            "unsubscribe_link": "evazaym.ru/unsubscribe",
+            "email": "support@evazaym.ru",
+            "phone": "84954632823"
+        },
+        {
+            "name": "Realzaim.io (Реальный займ)",
+            "unsubscribe_link": "realzaim.io/payment/unsubscribe",
+            "email": "support@realzaim.io",
+            "phone": "78007753659"
+        },
+        {
+            "name": "Nalichno.online (Реальный заём)",
+            "unsubscribe_link": "nalichno.online/payment/unsubscribe/",
+            "email": "support@nalichno.online",
+            "phone": "78002000052"
+        },
+        {
+            "name": "Dengatyt.ru (Деньги тут)",
+            "unsubscribe_link": "dengatyt.ru/unsubscribe",
+            "email": "support@dengatyt.pw",
+            "phone": "74951337563"
+        },
+        {
+            "name": "Cardzaim.ru (Одобряк)",
+            "unsubscribe_link": "cardzaim.ru/payment/unsubscribe",
+            "email": "support@cardzaim.ru",
+            "phone": "88003333244"
+        },
+        {
+            "name": "Finny.ru (Финни)",
+            "unsubscribe_link": "finny.ru/login",
+            "email": "support@finny.ru",
+            "phone": "74951336487"
+        },
+        {
+            "name": "24-bank.ru (24 банк)",
+            "unsubscribe_link": "24-bank.ru/otpiska.html",
+            "email": "info@24-bank.ru",
+            "phone": "74993429500"
+        },
+        {
+            "name": "Uni-cloud.ru (Юни Клауд)",
+            "unsubscribe_link": "uni-cloud.ru/otpiska.php",
+            "email": "support@uni-cloud.ru",
+            "phone": "73433009239"
+        },
+        {
+            "name": "Myzaim.io (mzaim, Мой займ)",
+            "unsubscribe_link": "myzaim.io/payment/unsubscribe",
+            "email": "support@myzaim.io",
+            "phone": "88003333244"
+        },
+        {
+            "name": "Be-fin.ru (Будь с финансами)",
+            "unsubscribe_link": "be-fin.ru/unsubscribe/phone",
+            "email": "help@finservice.market",
+            "phone": "88003028834"
+        },
+        {
+            "name": "Creditpanda.ru (Кредит Панда)",
+            "unsubscribe_link": "creditpanda.ru/unsubscribe",
+            "email": "support@creditpanda.ru",
+            "phone": "74953746808"
+        },
+        {
+            "name": "Zaymoteka.online (Займотека)",
+            "unsubscribe_link": "zaymoteka.online/unsubscribe",
+            "email": "support@zaymoteka.online",
+            "phone": "84993807399"
+        },
+        {
+            "name": "Mirzaimov.io (Мир Займов)",
+            "unsubscribe_link": "mirzaimov.io/payment/unsubscribe/",
+            "email": "support@mirzaimov.io",
+            "phone": "78007757823"
+        },
+        {
+            "name": "Vidadim.ru (Выдадим)",
+            "unsubscribe_link": "vidadim.ru/unsubscribe",
+            "email": "client@vidadim.ru",
+            "phone": "–"
+        },
+        {
+            "name": "Kopeechka.su (Копеечка)",
+            "unsubscribe_link": "kopeechka.su/unsubscribe",
+            "email": "support@kopeechka.su",
+            "phone": "84951502452"
+        },
+        {
+            "name": "Mnedali.ru (Мне Дали)",
+            "unsubscribe_link": "mnedali.ru/personal-account/",
+            "email": "support@mnedali.ru",
+            "phone": "88002223237"
+        },
+        {
+            "name": "Zaim-sbd.ru (Кредитка, Дельфа)",
+            "unsubscribe_link": "zaim-sbd.ru",
+            "email": "oferta@zaim-sbd.ru",
+            "phone": "–"
+        },
+        {
+            "name": "Mikrozaymi24 (Микрозайм 24)",
+            "unsubscribe_link": "mikrozaymi24.ru/unsubscribe",
+            "email": "support@mikrozaymi24.ru",
+            "phone": "–"
+        },
+        {
+            "name": "Metazaym.ru (Мета займ)",
+            "unsubscribe_link": "metazaym.ru/unsubscribe",
+            "email": "metazaym@personalsupport.ru",
+            "phone": "84952968282"
+        },
+        {
+            "name": "Fresh-starts.ru (Фрешстартс)",
+            "unsubscribe_link": "fresh-starts.ru/unsubscribe",
+            "email": "fresh-starts@supportkk.ru",
+            "phone": "84952967202"
+        },
+        {
+            "name": "Lovecredit.ru (Лав Кредит)",
+            "unsubscribe_link": "lovecredit.ru/unsubscribe",
+            "email": "lovecredit@personalsupport.ru",
+            "phone": "84998266854"
+        },
+        {
+            "name": "Creditmonkey.ru (Обезаём)",
+            "unsubscribe_link": "creditmonkey.ru/unsubscribe",
+            "email": "creditmonkey@drugdengi.ru",
+            "phone": "84951199479"
+        },
+        {
+            "name": "Rubloni (Рублони)",
+            "unsubscribe_link": "rubloni.ru/unsubscribe",
+            "email": "support@rubloni.ru",
+            "phone": "84953749264"
+        },
+        {
+            "name": "Zaimohelp.io (Займохелп)",
+            "unsubscribe_link": "zaimohelp.io/payment/unsubscribe/",
+            "email": "support@zaimohelp.io",
+            "phone": "–"
+        },
+        {
+            "name": "Clickurist.ru (Клик юрист)",
+            "unsubscribe_link": "–",
+            "email": "vopros@clickurist.ru",
+            "phone": "78452398884"
+        },
+        {
+            "name": "MoyKredit.site (Семейный займ)",
+            "unsubscribe_link": "moykredit.site/payment/unsubscribe/",
+            "email": "support@moykredit.site",
+            "phone": "78002226956"
+        },
+        {
+            "name": "Kreditpoisk.su (Кредит поиск)",
+            "unsubscribe_link": "kreditpoisk.su/unsubscribe/",
+            "email": "hello@kreditpoisk.su",
+            "phone": "74993507704"
+        },
+        {
+            "name": "Ruskred (Доставка займов)",
+            "unsubscribe_link": "ruskred.ru/payment/unsubscribe/",
+            "email": "support@ruskred.ru",
+            "phone": "78002226956"
+        },
+        {
+            "name": "Creditwhite.ru (Кредит Вайт)",
+            "unsubscribe_link": "creditwhite.ru/unsubscribe",
+            "email": "creditwhite@personalsupport.ru",
+            "phone": "84952966160"
+        },
+        {
+            "name": "Dengi-kredit.site (Деньги Кредит)",
+            "unsubscribe_link": "dengi-kredit.site/payment/unsubscribe/",
+            "email": "support@dengi-kredit.site",
+            "phone": "78007756357"
+        },
+        {
+            "name": "Zaemcard.ru (Рублевый заём)",
+            "unsubscribe_link": "zaemcard.ru/payment/unsubscribe/",
+            "email": "support@zaemcard.ru",
+            "phone": "78007756357"
+        },
+        {
+            "name": "Reallycash.ru (Рили кэш)",
+            "unsubscribe_link": "reallycash.ru/payment/unsubscribe/",
+            "email": "support@reallycash.ru",
+            "phone": "78007754876"
+        },
+        {
+            "name": "Youzaym.ru (Ю-займ)",
+            "unsubscribe_link": "youzaym.ru/unsubscribe/",
+            "email": "info@youzaym.ru",
+            "phone": "74993400242"
+        },
+        {
+            "name": "Watercredit.ru (Вода Кредит)",
+            "unsubscribe_link": "watercredit.ru/unsubscribe",
+            "email": "watercredit@personalsupport.ru",
+            "phone": "84952967595"
+        },
+        {
+            "name": "Zaim4you.xyz (Денежная помощь)",
+            "unsubscribe_link": "zaim4you.xyz/payment/unsubscribe/",
+            "email": "support@zaim4you.xyz",
+            "phone": "78002226956"
+        },
+        {
+            "name": "Simple-money.ru (Bitreit)",
+            "unsubscribe_link": "simple-money.ru/unfollow",
+            "email": "info@simple-money.ru",
+            "phone": "84952038091"
+        },
+        {
+            "name": "Lions-credit.ru (Bitreit)",
+            "unsubscribe_link": "lions-credit.ru/unfollow",
+            "email": "info@lions-credit.ru",
+            "phone": "74994503729"
+        },
+        {
+            "name": "Credity.site (Одобрятор)",
+            "unsubscribe_link": "credity.site",
+            "email": "support@credity.site",
+            "phone": "78007754876"
+        },
+        {
+            "name": "Credity.pro (Одобрятор)",
+            "unsubscribe_link": "credity.pro/payment/unsubscribe",
+            "email": "support@credity.pro",
+            "phone": "78003331897"
+        },
+        {
+            "name": "Makecredit.ru (Сделаем кредит)",
+            "unsubscribe_link": "makecredit.ru/unsubscribe",
+            "email": "makecredit@drugdengi.ru",
+            "phone": "84952963031"
+        },
+        {
+            "name": "Bankcredit.site (Довольные деньги)",
+            "unsubscribe_link": "bankcredit.site",
+            "email": "support@bankcredit.site",
+            "phone": "78007756357"
+        },
+        {
+            "name": "IP Osaulenko (ИП Осауленко)",
+            "unsubscribe_link": "—",
+            "email": "—",
+            "phone": "88005553597"
+        },
+        {
+            "name": "Finzerro.ru (Финзерро)",
+            "unsubscribe_link": "finzerro.ru/login",
+            "email": "client@finzerro.ru",
+            "phone": "88005553597"
+        },
+        {
+            "name": "Primezaim.su (Прайм займ, Займ бери)",
+            "unsubscribe_link": "primezaim.su/login",
+            "email": "client@prostozaim.su",
+            "phone": "88005553597"
+        },
+        {
+            "name": "Bonon.ru (Бонон)",
+            "unsubscribe_link": "bonon.ru/unsubscribe",
+            "email": "support@bonon.ru",
+            "phone": "84951652605"
+        },
+        {
+            "name": "Sms-zaim (СМС займ)",
+            "unsubscribe_link": "sms-zaim.guru",
+            "email": "client@sms-zaim.guru",
+            "phone": "84951500146"
+        },
+        {
+            "name": "Zaim-fast.kz (Займ фаст)",
+            "unsubscribe_link": "zaim-fast.kz/payment/unsubscribe/",
+            "email": "support@zaim-fast.kz",
+            "phone": "–"
+        },
+        {
+            "name": "Zanizaem (Занизаем, У Дарьи Петровой)",
+            "unsubscribe_link": "zanizaem.ru/personal-cabinet/login",
+            "email": "client@zanizaem.ru",
+            "phone": "84951500146"
+        },
+        {
+            "name": "Eqvantalab (Экванталаб)",
+            "unsubscribe_link": "turbozaim.ru/feedback/",
+            "email": "info@turbozaim.ru",
+            "phone": "74999519180"
+        },
+        {
+            "name": "Money2me.ru (Мои Деньги)",
+            "unsubscribe_link": "money2me.ru/unsubscribe",
+            "email": "money2me@personalsupport.ru",
+            "phone": "84952967462"
+        },
+        {
+            "name": "Cosmozaym.ru (Космозайм)",
+            "unsubscribe_link": "cosmozaym.ru/cabinet/login",
+            "email": "support@cosmozaym.ru",
+            "phone": "84954632976"
+        },
+        {
+            "name": "Fastmfo.ru (Займ Фаст)",
+            "unsubscribe_link": "fastmfo.ru/unsubscribe",
+            "email": "fastmfo@de-vtek.ru",
+            "phone": "79862266125"
+        },
+        {
+            "name": "Havecredit.ru (Есть кредит)",
+            "unsubscribe_link": "havecredit.ru/unsubscribe",
+            "email": "havecredit@de-vtek.ru",
+            "phone": "84951148543"
+        },
+        {
+            "name": "Vistazaim.ru (Виста займ)",
+            "unsubscribe_link": "vistazaim.ru",
+            "email": "client@vistazaim.ru",
+            "phone": "84951500146"
+        },
+        {
+            "name": "Finvesto.online (Заемчик)",
+            "unsubscribe_link": "finvesto.online/payment/unsubscribe/",
+            "email": "support@finvesto.online",
+            "phone": "–"
+        },
+        {
+            "name": "Dofino.ru (Дофино)",
+            "unsubscribe_link": "dofino.ru/cabinet/login",
+            "email": "dofino.help@yandex.ru",
+            "phone": "74993228796"
+        },
+        {
+            "name": "Hellozaim (Хелло займ)",
+            "unsubscribe_link": "hellozaim.ru/payment/unsubscribe/",
+            "email": "support@hellozaim.ru",
+            "phone": "88003333244"
+        },
+        {
+            "name": "Yellowzaim.ru (Заниматор)",
+            "unsubscribe_link": "yellowzaim.ru/payment/unsubscribe/",
+            "email": "support@yellowzaim.ru",
+            "phone": "88003333244"
+        },
+        {
+            "name": "Leadmaster.su (Лид Мастер)",
+            "unsubscribe_link": "leadmaster.finance",
+            "email": "–",
+            "phone": "84951500146"
+        },
+        {
+            "name": "Zaymy.site (Займы)",
+            "unsubscribe_link": "zaymy.site/payment/unsubscribe/",
+            "email": "support@zaymy.site",
+            "phone": "78007758019"
+        },
+        {
+            "name": "495 Credit (495 Кредит)",
+            "unsubscribe_link": "–",
+            "email": "support@495credit.ru",
+            "phone": "74951222289"
+        },
+        {
+            "name": "Dengi7 (Деньги 7)",
+            "unsubscribe_link": "dengi7.ru/unsubscribe",
+            "email": "info@dengi7.ru",
+            "phone": "78452398820"
+        },
+        {
+            "name": "Beri credit (Бери Кредит)",
+            "unsubscribe_link": "beri-credit.com",
+            "email": "client@beri-credit.com",
+            "phone": "84951500146"
+        },
+        {
+            "name": "Blammo Many (Бламмо Мани)",
+            "unsubscribe_link": "erck.ru/lk/login",
+            "email": "vozvrat@multypolisbm.ru",
+            "phone": "88005556582"
+        },
+        {
+            "name": "Cashzaim.io (Просто займы)",
+            "unsubscribe_link": "cashzaim.io/payment/unsubscribe/",
+            "email": "support@cashzaim.io",
+            "phone": "78007758621"
+        },
+        {
+            "name": "Roszaim.com (Росзайм)",
+            "unsubscribe_link": "roszaim.com/unsubscribe/phone",
+            "email": "help@finservice.market",
+            "phone": "88003028834"
+        },
+        {
+            "name": "Knopkadengi.ru (Кнопка Деньги)",
+            "unsubscribe_link": "knopkadengi.ru/user/login",
+            "email": "info@knopkadengi.ru",
+            "phone": "88006008225"
+        },
+        {
+            "name": "Zaimneonline (Займне)",
+            "unsubscribe_link": "zaimne.online/payment/unsubscribe/",
+            "email": "support@zaimne.online",
+            "phone": "88003333244"
+        },
+        {
+            "name": "Bankomato.ru (МКК Технология Займ)",
+            "unsubscribe_link": "lk.bankomato.ru/login",
+            "email": "info@bankomato.ru",
+            "phone": "88006008864"
+        },
+        {
+            "name": "Moneycap.ru (Маникап ру)",
+            "unsubscribe_link": "moneycap.ru/payment/unsubscribe/",
+            "email": "support@moneycap.ru",
+            "phone": "78002228467"
+        },
+        {
+            "name": "Zaymfo.ru (Citicredit)",
+            "unsubscribe_link": "zaymfo.ru/unsubscribe",
+            "email": "support@zaymfo.ru",
+            "phone": "84954924254"
+        },
+        {
+            "name": "Citicredit.ru (Citi credit)",
+            "unsubscribe_link": "citicredit.ru/unsubscribe",
+            "email": "support@citicredit.ru",
+            "phone": "84951505419"
+        },
+        {
+            "name": "Easyzaim (Изизайм)",
+            "unsubscribe_link": "easyzaim.site/payment/unsubscribe/",
+            "email": "support@easyzaim.site",
+            "phone": "78003330794"
+        },
+        {
+            "name": "Fishkazaim.org (Фишка Займ, Без переплаты)",
+            "unsubscribe_link": "fishkazaim.org/payment/unsubscribe/",
+            "email": "support@fishkazaim.org",
+            "phone": "78007756291"
+        },
+        {
+            "name": "Yescash.io (Заем Даром)",
+            "unsubscribe_link": "yescash.io/payment/unsubscribe/",
+            "email": "support@yescash.io",
+            "phone": "78002228453"
+        },
+        {
+            "name": "Lifezaim (Заем Даром, Лайф займ)",
+            "unsubscribe_link": "lifezaim.com/payment/unsubscribe/",
+            "email": "support@lifezaim.com",
+            "phone": "78002228421"
+        },
+        {
+            "name": "Zaemchik.io (Заемчик, Заниматор)",
+            "unsubscribe_link": "zaemchik.io/payment/unsubscribe/",
+            "email": "support@zaemchik.io",
+            "phone": "78007758671"
+        },
+        {
+            "name": "Easycash.kz (Easy cash)",
+            "unsubscribe_link": "easycash.kz/unsubscribe/",
+            "email": "hello@easycash.kz",
+            "phone": "77273122823"
+        },
+        {
+            "name": "Bank-kredit.online (Банк Кредит Самара)",
+            "unsubscribe_link": "bank-kredit.guru",
+            "email": "client@bank-kredit.guru",
+            "phone": "84951500146"
+        },
+        {
+            "name": "Finhelps.su (Финхелпс, Планета Займ)",
+            "unsubscribe_link": "finhelps.su/login",
+            "email": "client@finhelps.su",
+            "phone": "88005559460"
+        },
+        {
+            "name": "Cash 24/7 (Кэш 24/7)",
+            "unsubscribe_link": "cash247.ru/unsubscribe",
+            "email": "client@cash247.ru",
+            "phone": "–"
+        },
+        {
+            "name": "Vzaemo.ru (Вам займ)",
+            "unsubscribe_link": "vzaemo.ru/lk/login",
+            "email": "client@vzaemo.ru",
+            "phone": "88002222205"
+        },
+        {
+            "name": "Getzaem.org (Гет займ vyborg rus)",
+            "unsubscribe_link": "getzaem.org/payment/unsubscribe/",
+            "email": "support@getzaem.org",
+            "phone": "78002228387"
+        },
+        {
+            "name": "Likezaim67.ru (МКК Девелопмент)",
+            "unsubscribe_link": "likezaim67.ru",
+            "email": "support@likezaim67.ru",
+            "phone": "88004448280"
+        },
+        {
+            "name": "Zaim-express.ru (МКК Займ Экспресс)",
+            "unsubscribe_link": "zaim-express.ru/feedback",
+            "email": "–",
+            "phone": "88003330202"
+        },
+        {
+            "name": "Okocredit.ru (Ококредит)",
+            "unsubscribe_link": "okocredit.ru/unsubscribe",
+            "email": "okocredit@drugdengi.ru",
+            "phone": "84952968328"
+        },
+        {
+            "name": "Credit-grad.ru (Кредит Град)",
+            "unsubscribe_link": "credit-grad.ru/unsubscribe",
+            "email": "credit-grad@personalsupport.ru",
+            "phone": "84958262268"
+        },
+        {
+            "name": "Akvariusmkk.ru (МКК Аквариус)",
+            "unsubscribe_link": "akvariusmkk.ru",
+            "email": "mkk.akvarius@mail.ru",
+            "phone": "88005553056"
+        },
+        {
+            "name": "Мойкредит.рф",
+            "unsubscribe_link": "–",
+            "email": "support@moikredit.ru",
+            "phone": "–"
+        },
+        {
+            "name": "Zerozaim.io (rk zerozaimio)",
+            "unsubscribe_link": "zerozaim.io/payment/unsubscribe/",
+            "email": "support@zerozaim.io",
+            "phone": "78002228421"
+        },
+        {
+            "name": "Moneyzaim (moneyzaim g kondrovo)",
+            "unsubscribe_link": "moneyzaim.su/unsubscribe",
+            "email": "support@moneyzaim.su",
+            "phone": "74991136922"
+        },
+        {
+            "name": "Kreditoff.site (rk kreditoffsite)",
+            "unsubscribe_link": "kreditoff.site/payment/unsubscribe/",
+            "email": "support@kreditoff.site",
+            "phone": "78007754876"
+        },
+        {
+            "name": "Dengavam.ru (Океан займ)",
+            "unsubscribe_link": "dengavam.ru/login",
+            "email": "client@dengavam.ru",
+            "phone": "88005559460"
+        },
+        {
+            "name": "Tvoizaym.ru (Твой займ Тула)",
+            "unsubscribe_link": "tvoizaym.ru/unsubscribe",
+            "email": "info@tvoyzaym.ru",
+            "phone": "74950033589"
+        },
+        {
+            "name": "Tvoyzaym.ru (Твой займ Екатеринбург)",
+            "unsubscribe_link": "tvoyzaym.ru/unsubscribe",
+            "email": "info@tvoyzaym.ru",
+            "phone": "74950033589"
+        },
+        {
+            "name": "Momentozaim.io (rk momentozaimio)",
+            "unsubscribe_link": "momentozaim.io/payment/unsubscribe/",
+            "email": "support@momentozaim.io",
+            "phone": "78003331731"
+        },
+        {
+            "name": "Onloany.org (rk*onloanyorg)",
+            "unsubscribe_link": "onloany.org/payment/unsubscribe/",
+            "email": "support@onloany.org",
+            "phone": "78003332166"
+        },
+        {
+            "name": "Zaim mobi (rk zaimmobi)",
+            "unsubscribe_link": "zaim.mobi/payment/unsubscribe/",
+            "email": "support@zaim.mobi",
+            "phone": "88003333244"
+        },
+        {
+            "name": "Moonzaim.pro (rk ip bogomolova kse)",
+            "unsubscribe_link": "moonzaim.pro/payment/unsubscribe/",
+            "email": "support@moonzaim.pro",
+            "phone": "78003333244"
+        },
+        {
+            "name": "Microzaim.top shchekino (Микрозайм топ)",
+            "unsubscribe_link": "microzaim.top/unsubscribe/",
+            "email": "support@microzaim.top",
+            "phone": "74951283593"
+        },
+        {
+            "name": "Moykredit.pro (rk*moykreditpro ulianovsk)",
+            "unsubscribe_link": "moykredit.pro/payment/unsubscribe/",
+            "email": "support@moykredit.pro",
+            "phone": "78003333244"
+        },
+        {
+            "name": "Bunnymoney.ru (МКК Ясень)",
+            "unsubscribe_link": "lk.bunnymoney.ru",
+            "email": "info@bunnymoney.ru",
+            "phone": "88006007840"
+        },
+        {
+            "name": "777zaym.ru (777 займ)",
+            "unsubscribe_link": "777zaym.ru/unsubscribe",
+            "email": "info@777zaym.ru",
+            "phone": "74950033589"
+        },
+        {
+            "name": "Zaym-dozp.ru (Займ до зарплаты)",
+            "unsubscribe_link": "zaym-dozp.ru/unsubscribe",
+            "email": "info@zaym-dozp.ru",
+            "phone": "74950033589"
+        },
+        {
+            "name": "It consul (Айти Консул)",
+            "unsubscribe_link": "insurfinanceconsulting.ru/login",
+            "email": "help@insurfinanceconsulting.ru",
+            "phone": "–"
+        },
+        {
+            "name": "Kredomir.site (Кредомир, Ноль процентов)",
+            "unsubscribe_link": "kredomir.site/payment/unsubscribe/",
+            "email": "support@kredomir.site",
+            "phone": "78007758964"
+        },
+        {
+            "name": "Easy-cash.pro (Изи Кэш)",
+            "unsubscribe_link": "easy-cash.pro/unsub",
+            "email": "info@easy-cash.pro",
+            "phone": "88006528865"
+        },
+        {
+            "name": "Helpcredi.com (rk helpcredicom)",
+            "unsubscribe_link": "helpcredi.com/payment/unsubscribe/",
+            "email": "support@helpcredi.com",
+            "phone": "78003333244"
+        },
+        {
+            "name": "Familyzaym (Семейный заем)",
+            "unsubscribe_link": "familyzaym.ru/unsubscribe",
+            "email": "familyzaym@drugdengi.ru",
+            "phone": "84952963021"
+        },
+        {
+            "name": "Kredso (imp_kredso)",
+            "unsubscribe_link": "kredso.ru/unsubscribe",
+            "email": "support@kredso.ru",
+            "phone": "84954920429"
+        },
+        {
+            "name": "10mo.net (10mo)",
+            "unsubscribe_link": "10mo.net/cabinet/login",
+            "email": "client@10mo.net",
+            "phone": "74991138058"
+        },
+        {
+            "name": "Dengirus.ru (Деньгирус)",
+            "unsubscribe_link": "dengirus.ru/unsubscribe",
+            "email": "support@dengirus.ru",
+            "phone": "74954927121"
+        },
+        {
+            "name": "Timfo (Тимфо)",
+            "unsubscribe_link": "timfo.ru/unsubscribe",
+            "email": "support@timfo.ru",
+            "phone": "74956461024"
+        },
+        {
+            "name": "Pay-zaim.su (Pay zaim Barnaul)",
+            "unsubscribe_link": "pay-zaim.su/login",
+            "email": "client@pay-zaim.su",
+            "phone": "88005553597"
+        },
+        {
+            "name": "Getzaim.su (Гетзайм)",
+            "unsubscribe_link": "getzaim.su/forms/unsubscribe/",
+            "email": "support@getzaim.su",
+            "phone": "74996539400"
+        },
+        {
+            "name": "3zaem com (3 заем)",
+            "unsubscribe_link": "3zaem.ru/unsubscribe",
+            "email": "info@3zaem.ru",
+            "phone": "74951081253"
+        },
+        {
+            "name": "5zaim.ru (5 zaim)",
+            "unsubscribe_link": "5zaim.ru/unsubscribe/login",
+            "email": "client@5zaim.ru",
+            "phone": "88005553820"
+        },
+        {
+            "name": "Fresh-zaim.ru (Фреш займ)",
+            "unsubscribe_link": "fresh-zaim.ru/unfollow",
+            "email": "info@fresh-zaim.ru",
+            "phone": "84952038091"
+        },
+        {
+            "name": "A-zaem (A заем)",
+            "unsubscribe_link": "a-zaem.ru/unsubscribe",
+            "email": "a-zaem@supporthere.ru",
+            "phone": "84952966160"
+        },
+        {
+            "name": "Moneywomen.ru (Мани вумен)",
+            "unsubscribe_link": "moneywomen.ru",
+            "email": "client@moneywomen.ru",
+            "phone": "84951500146"
+        },
+        {
+            "name": "Ip khustochkin aleksa (ИП Хусточкин)",
+            "unsubscribe_link": "kredomir.site/payment/unsubscribe/",
+            "email": "support@kredomir.site",
+            "phone": "78007758964"
+        },
+        {
+            "name": "Ip Illarionova na (ИП Илларионова)",
+            "unsubscribe_link": "onloany.org/payment/unsubscribe/",
+            "email": "support@onloany.org",
+            "phone": "78003332166"
+        },
+        {
+            "name": "Ip Shurpik dmitrij (ИП Шурпик)",
+            "unsubscribe_link": "getzaem.org/payment/unsubscribe/",
+            "email": "support@getzaem.org",
+            "phone": "78002228387"
+        },
+        {
+            "name": "Maxcash.ru (Макс Кэш)",
+            "unsubscribe_link": "maxcash.ru/unsubscribe",
+            "email": "info@maxcash.ru",
+            "phone": "74950033589"
+        },
+        {
+            "name": "Zaimhood (Займхуд)",
+            "unsubscribe_link": "zaimhood.ru/unsubscribe/",
+            "email": "support@zaimhood.ru",
+            "phone": "74954323352"
+        },
+        {
+            "name": "Winzaym (Винзайм)",
+            "unsubscribe_link": "v.win-zaim.ru/cancel/mailing/",
+            "email": "–",
+            "phone": "–"
+        },
+        {
+            "name": "Rk ooo skill (Скилл)",
+            "unsubscribe_link": "–",
+            "email": "–",
+            "phone": "–"
+        },
+        {
+            "name": "Davaka (Давака)",
+            "unsubscribe_link": "profile.davaka.ru",
+            "email": "support@davaka.ru",
+            "phone": "88007006690"
+        },
+        {
+            "name": "Omoney (Омани)",
+            "unsubscribe_link": "pay.omoney.ru/unsubscribe",
+            "email": "info@omoney.ru",
+            "phone": "79771612259"
+        },
+        {
+            "name": "Hot-zaim.ru (Хотзайм)",
+            "unsubscribe_link": "hot-zaim.ru/lk/login",
+            "email": "client@hot-zaim.ru",
+            "phone": "88002222205"
+        },
+        {
+            "name": "My-finance.me (Мои финансы)",
+            "unsubscribe_link": "my-finance.me/lk/login",
+            "email": "client@my-finance.me",
+            "phone": "88002222205"
+        },
+        {
+            "name": "Петрович.com (Петрович)",
+            "unsubscribe_link": "xn--b1afkwdhn8b.com/lk/login",
+            "email": "client@petrovich.credit",
+            "phone": "88002222205"
+        },
+        {
+            "name": "Sovetzaim (СоветЗайм, Советские займы)",
+            "unsubscribe_link": "sovetzaim.ru/lk/login",
+            "email": "client@sovetzaim.ru",
+            "phone": "88002222205"
+        },
+        {
+            "name": "Prostozaim (Просто займы)",
+            "unsubscribe_link": "prostozaim.su/login",
+            "email": "client@prostozaim.su",
+            "phone": "88005553820"
+        },
+        {
+            "name": "Ruzaim.su (Ruzaim)",
+            "unsubscribe_link": "ruzaim.su/unsubscribe",
+            "email": "client@ruzaim.su",
+            "phone": "88005553597"
+        },
+        {
+            "name": "Shop-zaim.su (Shop zaim su)",
+            "unsubscribe_link": "shop-zaim.su/unsubscribe/login",
+            "email": "client@shop-zaem.su",
+            "phone": "88005553597"
+        },
+        {
+            "name": "Finkrot.ru (Финкрот)",
+            "unsubscribe_link": "finkrot.ru/login",
+            "email": "support@finkrot.ru",
+            "phone": "74951337189"
+        },
+        {
+            "name": "Finsokol (Финсокол)",
+            "unsubscribe_link": "finsokol.ru/login",
+            "email": "support@finsokol.ru",
+            "phone": "74952666892"
+        },
+        {
+            "name": "Zaimhub (Займхаб)",
+            "unsubscribe_link": "zaimhub.ru/unsubscribe",
+            "email": "support@zaimhub.ru",
+            "phone": "74951616717"
+        },
+        {
+            "name": "Dam-credit.ru (Credit dam)",
+            "unsubscribe_link": "dam-credit.ru/unsubscribe",
+            "email": "dam-credit@supportkk.ru",
+            "phone": "84952966156"
+        },
+        {
+            "name": "Dotcredit.ru (Dotcredit)",
+            "unsubscribe_link": "dotcredit.ru/unsubscribe",
+            "email": "dotcredit@supporthere.ru",
+            "phone": "–"
+        },
+        {
+            "name": "Ecozaym24.ru (Экозайм 24)",
+            "unsubscribe_link": "ecozaym24.ru",
+            "email": "doc@eco-zaim.ru",
+            "phone": "79613867540"
+        },
+        {
+            "name": "Creditory.ru (Кредиторы)",
+            "unsubscribe_link": "creditory.ru/cabinet/login",
+            "email": "clientcreditory.ru@yandex.ru",
+            "phone": "74993228796"
+        },
+        {
+            "name": "San-credos.ru (Bonon)",
+            "unsubscribe_link": "san-credos.ru/cabinet/login",
+            "email": "support@san-credos.ru",
+            "phone": "84954924417"
+        },
+        {
+            "name": "Lions-credit.ru (Lions-credit)",
+            "unsubscribe_link": "my.lions-credit.ru",
+            "email": "info@lions-credit.ru",
+            "phone": "74994503729"
+        },
+        {
+            "name": "Finansu.ru (Финансу)",
+            "unsubscribe_link": "finansu.ru/unsubscribe",
+            "email": "support@finansu.ru",
+            "phone": "84952152899"
+        },
+        {
+            "name": "Rublita.ru (Рублита)",
+            "unsubscribe_link": "rublita.ru/unsubscribe",
+            "email": "support@rublita.ru",
+            "phone": "84951501125"
+        },
+        {
+            "name": "Dazaem.ru (Да заем)",
+            "unsubscribe_link": "dazaem.ru/unfollow",
+            "email": "info@dazaem.ru",
+            "phone": "84953783251"
+        },
+        {
+            "name": "МКК Декада (Каширо)",
+            "unsubscribe_link": "lk.cashiro.ru/login",
+            "email": "info@cashiro.ru",
+            "phone": "8007007053"
+        },
+        {
+            "name": "Пчелка (Пчелка займ)",
+            "unsubscribe_link": "пчелказайм.рф",
+            "email": "–",
+            "phone": "78462140525"
+        },
+        {
+            "name": "Jocredit (Джо Кредит)",
+            "unsubscribe_link": "jocredit.ru/unsubscribe",
+            "email": "support@jocredit.ru",
+            "phone": "74952416418"
+        },
+        {
+            "name": "Enot (Енот)",
+            "unsubscribe_link": "enot.su/unsubscribe",
+            "email": "info@enot.su",
+            "phone": "74995599410"
+        },
+        {
+            "name": "FinTigro (Финтигро)",
+            "unsubscribe_link": "fintigro.ru/unsubscribe",
+            "email": "support@fintigro.ru",
+            "phone": "78462192601"
+        },
+        {
+            "name": "2can Mloans ru (Березка заём)",
+            "unsubscribe_link": "mloans.ru/payment/unsubscribe",
+            "email": "support@mloans.ru",
+            "phone": "78002228369"
+        },
+        {
+            "name": "Zaemis (Заемис)",
+            "unsubscribe_link": "zaemis.ru/personal-cabinet/login",
+            "email": "client@zaemis.ru",
+            "phone": "84951294600"
+        },
+        {
+            "name": "Daem Zaem (Даем Заем)",
+            "unsubscribe_link": "даем-заем.рф",
+            "email": "info@daem-zaem.com",
+            "phone": "83832552655"
+        },
+        {
+            "name": "Ivanuch (У Иваныча)",
+            "unsubscribe_link": "ivanuch.com/lk/login",
+            "email": "client@ivanuch.com",
+            "phone": "88002222205"
+        },
+        {
+            "name": "Cash Me (Кэш Ми)",
+            "unsubscribe_link": "cash-me.ru/unsubscribe",
+            "email": "support@cash-me.ru",
+            "phone": "74950212105"
+        },
+        {
+            "name": "2can Zaempro (ОО Деньги!)",
+            "unsubscribe_link": "zaempro.ru/payment/unsubscribe/",
+            "email": "support@zaempro.ru",
+            "phone": "88002229076"
+        },
+        {
+            "name": "Zaiimik (Займ №1)",
+            "unsubscribe_link": "zaiimik.ru/payment/unsubscribe/",
+            "email": "support@zaiimik.ru",
+            "phone": "88002228764"
+        },
+        {
+            "name": "C-Redit (К-Редит)",
+            "unsubscribe_link": "c-redit.ru/unsubscribe",
+            "email": "support@c-redit.ru",
+            "phone": "74952601772"
+        },
+        {
+            "name": "Fresh Zaim (Фреш Займ)",
+            "unsubscribe_link": "fresh-zaim.ru/unfollow",
+            "email": "info@fresh-zaim.ru",
+            "phone": "84955619174"
+        },
+        {
+            "name": "Wincredit (Вин Кредит)",
+            "unsubscribe_link": "wincredit.ru/unsubscribe",
+            "email": "support@wincredit.ru",
+            "phone": "74951616855"
+        },
+        {
+            "name": "Nashzaim (Наш Займ)",
+            "unsubscribe_link": "nashzaim.ru/unsubscribe",
+            "email": "support@nashzaim.ru",
+            "phone": "74953746011"
+        },
+        {
+            "name": "2can ManiFani (Мани Фани)",
+            "unsubscribe_link": "manifani.ru/payment/unsubscribe/",
+            "email": "support@manifani.ru",
+            "phone": "88002229076"
+        },
+        {
+            "name": "Lazaim (Ля Займ)",
+            "unsubscribe_link": "lazaim.ru/pa",
+            "email": "client@lazaim.ru",
+            "phone": "74993481408"
+        },
+        {
+            "name": "Zaim pro (Займ Про)",
+            "unsubscribe_link": "zaim-pro.me/lk/login",
+            "email": "client@zaim-pro.me",
+            "phone": "88002222205"
+        },
+        {
+            "name": "Биг Займ (Big Zaim)",
+            "unsubscribe_link": "bigzaim.su/login",
+            "email": "client@bigzaim.su",
+            "phone": "88005553597"
+        },
+        {
+            "name": "МКК ZTCH (Капиталина)",
+            "unsubscribe_link": "capitalina.ru",
+            "email": "capital_116@capitalina.ru",
+            "phone": "88006008280"
+        },
+        {
+            "name": "Imp Fast Credit (Фаст Кредит)",
+            "unsubscribe_link": "fast-credit.online/unfollow",
+            "email": "info@fast-credit.online",
+            "phone": "74952038091"
+        },
+        {
+            "name": "Сreditglow (Кредит Глоу)",
+            "unsubscribe_link": "creditglow.ru/unsubscribe",
+            "email": "creditglow@responsefor.ru",
+            "phone": "74952967481"
+        },
+        {
+            "name": "Mega credit (Мега Кредит)",
+            "unsubscribe_link": "mega-credit.com/account/unsubscribe/",
+            "email": "support@mega-credit.com",
+            "phone": "–"
+        },
+        {
+            "name": "Creditosi (Кредитоси)",
+            "unsubscribe_link": "creditosi.ru/unsubscribe",
+            "email": "support@creditosi.ru",
+            "phone": "74951498366"
+        },
+        {
+            "name": "Туторплейс (Tutorplace)",
+            "unsubscribe_link": "client.tutorplace.ru/login",
+            "email": "support@tutorplace.ru",
+            "phone": "88005553282"
+        },
+        {
+            "name": "1xmoney (1 Икс Мани)",
+            "unsubscribe_link": "1xmoney.ru/login",
+            "email": "client@1xmoney.ru",
+            "phone": "88005553820"
+        },
+        {
+            "name": "Minizaem (Мини Займ)",
+            "unsubscribe_link": "big-zaem.su/login",
+            "email": "client@big-zaem.su",
+            "phone": "88005553597"
+        },
+        {
+            "name": "Creditai (Кредитай)",
+            "unsubscribe_link": "creditai.ru/unsubscribe",
+            "email": "creditai@drugdengi.ru",
+            "phone": "74952963655"
+        },
+        {
+            "name": "Fincash (ФинКэш)",
+            "unsubscribe_link": "fin-cash.su/login",
+            "email": "client@fin-cash.su",
+            "phone": "88005553597"
+        },
+        {
+            "name": "Чирик (Chirik)",
+            "unsubscribe_link": "chirik.su/unsubscribe",
+            "email": "info@chirik.su",
+            "phone": "74994443710"
+        },
+        {
+            "name": "Hitsi (Хитси)",
+            "unsubscribe_link": "hitsi.ru",
+            "email": "help@finservice.market",
+            "phone": "88003028834"
+        },
+        {
+            "name": "Creditexp (Кредит Эксперт)",
+            "unsubscribe_link": "creditexp.ru",
+            "email": "help@finservice.market",
+            "phone": "88003028834"
+        },
+        {
+            "name": "Starzaim (Стар Займ)",
+            "unsubscribe_link": "starzaim.com/unsubscribe/",
+            "email": "support@starzaim.com",
+            "phone": "–"
+        },
+        {
+            "name": "Frizaem (Фри Займ)",
+            "unsubscribe_link": "frizaem.ru/unsubscribe",
+            "email": "support@frizaem.ru",
+            "phone": "74952293023"
+        },
+        {
+            "name": "Creditkins (Кредиткинс)",
+            "unsubscribe_link": "creditkins.ru/login",
+            "email": "client@creditkins.ru",
+            "phone": "88005553597"
+        },
+        {
+            "name": "Семерочка (МКК Семерочка)",
+            "unsubscribe_link": "семерочка.рус",
+            "email": "semerochka7.info@ya.ru",
+            "phone": "83517767957"
+        },
+        {
+            "name": "Стандарт займ (Скредиткин)",
+            "unsubscribe_link": "skreditkin.ru/login",
+            "email": "client@skreditkin.ru",
+            "phone": "88005559460"
+        },
+        {
+            "name": "BTC-Bank (БТС Банк)",
+            "unsubscribe_link": "btc-bank.ru/unsubscribe",
+            "email": "btc-bank@responsefor.ru",
+            "phone": "84997044966"
+        },
+        {
+            "name": "BankEase (Банк Изи)",
+            "unsubscribe_link": "bankease.ru/unsubscribe",
+            "email": "bankease@supportkk.ru",
+            "phone": "74952966163"
+        },
+        {
+            "name": "Быстрокэш (Мини-Касса)",
+            "unsubscribe_link": "bistrocash.ru/login",
+            "email": "",
+            "phone": ""
+        },
+        {
+            "name": "Кредиткинс",
+            "unsubscribe_link": "creditkins.ru/login",
+            "email": "",
+            "phone": ""
+        },
+        {
+            "name": "5zaim",
+            "unsubscribe_link": "5zaim.ru/login",
+            "email": "",
+            "phone": ""
+        },
+        {
+            "name": "1xmoneys (Мастер Займ)",
+            "unsubscribe_link": "1xmoneys.ru/login",
+            "email": "",
+            "phone": ""
+        },
+        {
+            "name": "Финзерро",
+            "unsubscribe_link": "finzerro.ru/login",
+            "email": "",
+            "phone": ""
+        },
+        {
+            "name": "Бабоскин",
+            "unsubscribe_link": "baboskin.su/login",
+            "email": "",
+            "phone": ""
+        },
+        {
+            "name": "Фин-Кэш",
+            "unsubscribe_link": "fin-cash.su/login",
+            "email": "",
+            "phone": ""
+        },
+        {
+            "name": "Миг Кэш (Tutcash)",
+            "unsubscribe_link": "tutcash.ru/unsubscribe",
+            "email": "",
+            "phone": ""
+        },
+        {
+            "name": "Миг Кэш (Migcash)",
+            "unsubscribe_link": "migcash.ru/login",
+            "email": "",
+            "phone": ""
+        },
+        {
+            "name": "Финансовый помощник Аврора (Pay-zaim)",
+            "unsubscribe_link": "pay-zaim.su/login",
+            "email": "",
+            "phone": ""
+        },
+        {
+            "name": "Займ Бери (Primezaim)",
+            "unsubscribe_link": "primezaim.su/login",
+            "email": "",
+            "phone": ""
+        },
+        {
+            "name": "Биг Займ",
+            "unsubscribe_link": "bigzaim.su/login",
+            "email": "",
+            "phone": ""
+        },
+        {
+            "name": "Просто Займ",
+            "unsubscribe_link": "prostozaim.su/login",
+            "email": "",
+            "phone": ""
+        },
+        {
+            "name": "РуЗайм",
+            "unsubscribe_link": "ruzaim.su/login",
+            "email": "",
+            "phone": ""
+        },
+        {
+            "name": "Rubquest",
+            "unsubscribe_link": "https://rubquest.ru/unsubscribe",
+            "email": "",
+            "phone": ""
+        }
+    ]
+}
+
+# Сохранение базы в файл
+with open('brokers_database.json', 'w', encoding='utf-8') as f:
+    json.dump(brokers_db, f, ensure_ascii=False, indent=4)
+
+# Функция для поиска брокера по названию (регистронезависимая)
+def find_broker(broker_name):
+    for broker in brokers_db['brokers']:
+        if broker_name.lower() in broker['name'].lower():
+            return broker
+    return None
+
+# Пример использования
+if __name__ == "__main__":
+    search_term = input("Введите название брокера: ")
+    result = find_broker(search_term)
+    
+    if result:
+        print(f"\nНазвание: {result['name']}")
+        print(f"Ссылка для отписки: {result['unsubscribe_link']}")
+        print(f"Email для отказа: {result['email']}")
+        print(f"Телефон: {result['phone']}")
+    else:
+        print("Брокер не найден в базе.")
