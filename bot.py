@@ -97,6 +97,11 @@ async def ask_deepseek(prompt):
     - Сообщи, если вопрос не относится к отписке
     - Используй формальный и вежливый тон
     - Поправляй ошибки в данных пользователя
+    
+    Примеры правильных ответов:
+    - Для отписки от Prolads, пожалуйста, укажите ваш номер телефона или email, к которому привязана подписка.
+    - Пожалуйста, введите ФИО в формате "Фамилия Имя Отчество".
+    - Укажите название банка, с карты которого происходят списания.
     """
     
     try:
@@ -112,8 +117,8 @@ async def ask_deepseek(prompt):
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": prompt}
                 ],
-                "temperature": 0.3,  # Уменьшаем "креативность"
-                "max_tokens": 150,   # Ограничиваем длину ответа
+                "temperature": 0.3,
+                "max_tokens": 150,
             },
             timeout=10
         )
@@ -122,16 +127,23 @@ async def ask_deepseek(prompt):
         
         # Фильтруем ответы, не связанные с темой
         if "не по теме" in answer.lower() or "не относится" in answer.lower():
-            return "Этот вопрос не относится к отписке от услуг. Пожалуйста, задавайте вопросы только по теме отмены подписок."
+            return None
         return answer
         
     except Exception as e:
         logger.error(f"DeepSeek API error: {e}")
-        return "Произошла ошибка. Пожалуйста, продолжайте заполнение формы."
+        return None
 
 async def handle_free_text(update: Update, context: CallbackContext):
     user_message = update.message.text
     user_id = update.message.from_user.id
+    
+    # Проверяем, находится ли пользователь в процессе заполнения формы
+    current_state = context.user_data.get('state')
+    if current_state is not None:
+        # Если пользователь в процессе заполнения формы, перенаправляем его
+        await update.message.reply_text("Пожалуйста, продолжайте заполнение формы.")
+        return
     
     if context.user_data.get('contact_admin'):
         await context.bot.send_message(GROUP_ID, f"✉️ Сообщение от пользователя {user_id}:\n{user_message}")
@@ -139,19 +151,24 @@ async def handle_free_text(update: Update, context: CallbackContext):
         context.user_data['contact_admin'] = False
         return
     
-    # Если пользователь в процессе заполнения формы, перенаправляем его
-    current_state = await context.application.persistence.get_conversation(update.effective_chat.id)
-    if current_state in [FIO, SOURCE, BANK, CARD, EMAIL, PHONE]:
-        await update.message.reply_text("Пожалуйста, продолжайте заполнение формы.")
-        return
-    
-    # Обработка только тематических вопросов
+    # Обработка тематических вопросов
     response = await ask_deepseek(user_message)
-    await update.message.reply_text(response)
+    if response:
+        await update.message.reply_text(response)
+    else:
+        # Если вопрос не по теме, предлагаем начать процесс отписки
+        keyboard = [
+            [InlineKeyboardButton("✅ Начать оформление заявки", callback_data="start_form")],
+            [InlineKeyboardButton("📨 Связаться с админом", callback_data="contact_admin")]
+        ]
+        await update.message.reply_text(
+            "Этот вопрос не относится к отписке от услуг. Если вы хотите отменить подписку, нажмите кнопку ниже:",
+            reply_markup=InlineKeyboardMarkup(keyboard)
+        )
 
 async def start(update: Update, context: CallbackContext):
     keyboard = [
-        [InlineKeyboardButton("✅ Продолжить", callback_data="start_form")],
+        [InlineKeyboardButton("✅ Начать оформление заявки", callback_data="start_form")],
         [InlineKeyboardButton("📨 Связаться с админом", callback_data="contact_admin")],
         [InlineKeyboardButton("ℹ️ О сервисе", callback_data="about_service")]
     ]
@@ -166,6 +183,7 @@ async def handle_buttons(update: Update, context: CallbackContext):
     await query.answer()
     
     if query.data == "start_form":
+        context.user_data['state'] = FIO
         await query.edit_message_text("👤 Введите ФИО (Фамилия Имя Отчество):")
         return FIO
     elif query.data == "contact_admin":
@@ -183,47 +201,68 @@ async def handle_buttons(update: Update, context: CallbackContext):
 async def process_fio(update: Update, context: CallbackContext):
     text = update.message.text
     if not FIO_PATTERN.match(text):
-        await update.message.reply_text(await ask_deepseek(f"Пользователь ввел '{text}'. Попроси исправить на 'Фамилия Имя Отчество'."))
+        response = await ask_deepseek(f"Пользователь ввел '{text}'. Попроси исправить на 'Фамилия Имя Отчество'.")
+        if response:
+            await update.message.reply_text(response)
+        else:
+            await update.message.reply_text("Пожалуйста, введите ФИО в формате 'Фамилия Имя Отчество'.")
         return FIO
     
     context.user_data["fio"] = text
-    await update.message.reply_text("📃 Укажите источник списания:")
+    context.user_data['state'] = SOURCE
+    await update.message.reply_text("📃 Укажите источник списания (название сервиса, от которого хотите отписаться):")
     return SOURCE
 
 async def process_source(update: Update, context: CallbackContext):
     context.user_data["source"] = update.message.text
-    await update.message.reply_text("🏦 Введите название банка:")
+    context.user_data['state'] = BANK
+    await update.message.reply_text("🏦 Введите название банка, с карты которого происходят списания:")
     return BANK
 
 async def process_bank(update: Update, context: CallbackContext):
     context.user_data["bank"] = update.message.text
-    await update.message.reply_text("💳 Введите карту (формат: 123456*7890):")
+    context.user_data['state'] = CARD
+    await update.message.reply_text("💳 Введите номер карты (формат: 123456*7890):")
     return CARD
 
 async def process_card(update: Update, context: CallbackContext):
     text = update.message.text
     if not CARD_PATTERN.match(text):
-        await update.message.reply_text(await ask_deepseek(f"Пользователь ввел '{text}'. Попроси исправить на формат '123456*7890'."))
+        response = await ask_deepseek(f"Пользователь ввел '{text}'. Попроси исправить на формат '123456*7890'.")
+        if response:
+            await update.message.reply_text(response)
+        else:
+            await update.message.reply_text("Пожалуйста, введите номер карты в формате '123456*7890'.")
         return CARD
     
     context.user_data["card"] = text
-    await update.message.reply_text("📧 Введите email:")
+    context.user_data['state'] = EMAIL
+    await update.message.reply_text("📧 Введите email, привязанный к подписке:")
     return EMAIL
 
 async def process_email(update: Update, context: CallbackContext):
     text = update.message.text
     if not EMAIL_PATTERN.match(text):
-        await update.message.reply_text(await ask_deepseek(f"Пользователь ввел '{text}'. Попроси исправить на валидный email."))
+        response = await ask_deepseek(f"Пользователь ввел '{text}'. Попроси исправить на валидный email.")
+        if response:
+            await update.message.reply_text(response)
+        else:
+            await update.message.reply_text("Пожалуйста, введите корректный email.")
         return EMAIL
     
     context.user_data["email"] = text
-    await update.message.reply_text("📱 Введите телефон (10-15 цифр):")
+    context.user_data['state'] = PHONE
+    await update.message.reply_text("📱 Введите номер телефона (10-15 цифр), привязанный к подписке:")
     return PHONE
 
 async def process_phone(update: Update, context: CallbackContext):
     text = update.message.text
     if not PHONE_PATTERN.match(text):
-        await update.message.reply_text(await ask_deepseek(f"Пользователь ввел '{text}'. Попроси исправить на 10-15 цифр."))
+        response = await ask_deepseek(f"Пользователь ввел '{text}'. Попроси исправить на 10-15 цифр.")
+        if response:
+            await update.message.reply_text(response)
+        else:
+            await update.message.reply_text("Пожалуйста, введите номер телефона (10-15 цифр).")
         return PHONE
     
     context.user_data["phone"] = text
@@ -251,23 +290,6 @@ async def process_phone(update: Update, context: CallbackContext):
     
     context.user_data.clear()
     return ConversationHandler.END
-
-async def handle_free_text(update: Update, context: CallbackContext):
-    user_message = update.message.text
-    user_id = update.message.from_user.id
-    
-    if context.user_data.get('contact_admin'):
-        await context.bot.send_message(GROUP_ID, f"✉️ Сообщение от пользователя {user_id}:\n{user_message}")
-        await update.message.reply_text("✅ Ваше сообщение отправлено администратору.")
-        context.user_data['contact_admin'] = False
-        return
-    
-    try:
-        response = await ask_deepseek(user_message)
-        await update.message.reply_text(response)
-    except Exception as e:
-        logger.error(f"Ошибка обработки вопроса: {e}")
-        await update.message.reply_text("⚠️ Произошла ошибка при обработке вашего вопроса. Попробуйте позже.")
 
 async def handle_payment_button(update: Update, context: CallbackContext):
     query = update.callback_query
