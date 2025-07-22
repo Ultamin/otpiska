@@ -84,14 +84,12 @@ async def update_payment_status(user_id, status):
         )
         await db.commit()
 
-async def ask_deepseek(prompt, current_field=None):
-    system_prompt = f"""
+async def ask_deepseek(prompt):
+    system_prompt = """
     Ты - помощник в боте для отмены подписок. Твоя задача:
     1. Помогать пользователям правильно заполнять форму отписки
     2. Корректировать некорректные вводы данных
     3. Отвечать ТОЛЬКО на вопросы, связанные с отпиской от услуг
-    
-    Текущее поле формы: {current_field}
     
     Правила:
     - Отвечай кратко (1-2 предложения)
@@ -99,7 +97,6 @@ async def ask_deepseek(prompt, current_field=None):
     - Сообщи, если вопрос не относится к отписке
     - Используй формальный и вежливый тон
     - Поправляй ошибки в данных пользователя
-    - Если данные верны, подтверди это
     """
     
     try:
@@ -115,8 +112,8 @@ async def ask_deepseek(prompt, current_field=None):
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": prompt}
                 ],
-                "temperature": 0.3,
-                "max_tokens": 150,
+                "temperature": 0.3,  # Уменьшаем "креативность"
+                "max_tokens": 150,   # Ограничиваем длину ответа
             },
             timeout=10
         )
@@ -125,23 +122,16 @@ async def ask_deepseek(prompt, current_field=None):
         
         # Фильтруем ответы, не связанные с темой
         if "не по теме" in answer.lower() or "не относится" in answer.lower():
-            return None
+            return "Этот вопрос не относится к отписке от услуг. Пожалуйста, задавайте вопросы только по теме отмены подписок."
         return answer
         
     except Exception as e:
         logger.error(f"DeepSeek API error: {e}")
-        return None
+        return "Произошла ошибка. Пожалуйста, продолжайте заполнение формы."
 
 async def handle_free_text(update: Update, context: CallbackContext):
     user_message = update.message.text
     user_id = update.message.from_user.id
-    
-    # Проверяем, находится ли пользователь в процессе заполнения формы
-    current_state = context.user_data.get('state')
-    if current_state is not None:
-        # Если пользователь в процессе заполнения формы, перенаправляем его
-        await update.message.reply_text("Пожалуйста, продолжайте заполнение формы.")
-        return
     
     if context.user_data.get('contact_admin'):
         await context.bot.send_message(GROUP_ID, f"✉️ Сообщение от пользователя {user_id}:\n{user_message}")
@@ -149,30 +139,19 @@ async def handle_free_text(update: Update, context: CallbackContext):
         context.user_data['contact_admin'] = False
         return
     
-    # Обработка тематических вопросов
+    # Если пользователь в процессе заполнения формы, перенаправляем его
+    current_state = await context.application.persistence.get_conversation(update.effective_chat.id)
+    if current_state in [FIO, SOURCE, BANK, CARD, EMAIL, PHONE]:
+        await update.message.reply_text("Пожалуйста, продолжайте заполнение формы.")
+        return
+    
+    # Обработка только тематических вопросов
     response = await ask_deepseek(user_message)
-    if response:
-        keyboard = [
-            [InlineKeyboardButton("✅ Начать оформление заявки", callback_data="start_form")],
-            [InlineKeyboardButton("📨 Связаться с админом", callback_data="contact_admin")]
-        ]
-        await update.message.reply_text(
-            f"{response}\n\nЕсли вы хотите оформить заявку на отписку, нажмите кнопку ниже:",
-            reply_markup=InlineKeyboardMarkup(keyboard)
-        )
-    else:
-        keyboard = [
-            [InlineKeyboardButton("✅ Начать оформление заявки", callback_data="start_form")],
-            [InlineKeyboardButton("📨 Связаться с админом", callback_data="contact_admin")]
-        ]
-        await update.message.reply_text(
-            "Этот вопрос не относится к отписке от услуг. Если вы хотите отменить подписку, нажмите кнопку ниже:",
-            reply_markup=InlineKeyboardMarkup(keyboard)
-        )
+    await update.message.reply_text(response)
 
 async def start(update: Update, context: CallbackContext):
     keyboard = [
-        [InlineKeyboardButton("✅ Начать оформление заявки", callback_data="start_form")],
+        [InlineKeyboardButton("✅ Продолжить", callback_data="start_form")],
         [InlineKeyboardButton("📨 Связаться с админом", callback_data="contact_admin")],
         [InlineKeyboardButton("ℹ️ О сервисе", callback_data="about_service")]
     ]
@@ -301,6 +280,24 @@ async def process_phone(update: Update, context: CallbackContext):
     context.user_data.clear()
     return ConversationHandler.END
 
+
+async def handle_free_text(update: Update, context: CallbackContext):
+    user_message = update.message.text
+    user_id = update.message.from_user.id
+    
+    if context.user_data.get('contact_admin'):
+        await context.bot.send_message(GROUP_ID, f"✉️ Сообщение от пользователя {user_id}:\n{user_message}")
+        await update.message.reply_text("✅ Ваше сообщение отправлено администратору.")
+        context.user_data['contact_admin'] = False
+        return
+    
+    try:
+        response = await ask_deepseek(user_message)
+        await update.message.reply_text(response)
+    except Exception as e:
+        logger.error(f"Ошибка обработки вопроса: {e}")
+        await update.message.reply_text("⚠️ Произошла ошибка при обработке вашего вопроса. Попробуйте позже.")
+
 async def handle_payment_button(update: Update, context: CallbackContext):
     query = update.callback_query
     await query.answer()
@@ -348,15 +345,12 @@ async def successful_payment(update: Update, context: CallbackContext):
     )
     
     await update.message.reply_text(
-        "✅ <b>Платёж подтверждён!</b>\n\n"
-        "Мы уже начали работу над вашей заявкой.\n"
-        "Срок выполнения: 1-3 рабочих дня.\n\n"
-        "Если у вас есть вопросы, напишите /start",
-        parse_mode="HTML"
+        "✅ Платёж подтверждён! Мы начали работу.\n"
+        "Срок: 1-3 рабочих дня."
     )
 
 async def cancel(update: Update, context: CallbackContext):
-    await update.message.reply_text("❌ Процесс отменён. Для начала нового оформления нажмите /start")
+    await update.message.reply_text("❌ Процесс отменён.")
     context.user_data.clear()
     return ConversationHandler.END
 
@@ -365,7 +359,7 @@ async def error_handler(update: Update, context: CallbackContext):
     if update.callback_query:
         await update.callback_query.answer("⚠️ Ошибка. Попробуйте снова.")
     elif update.message:
-        await update.message.reply_text("⚠️ Ошибка. Попробуйте снова или нажмите /start")
+        await update.message.reply_text("⚠️ Ошибка. Попробуйте снова.")
 
 def main():
     # Создаем новый event loop
