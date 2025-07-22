@@ -1,6 +1,4 @@
-import json
-
-brokers_db = {
+{
     "brokers": [
         {
             "name": "Givemoney (Гивмани)",
@@ -1588,27 +1586,3 @@ brokers_db = {
         }
     ]
 }
-
-# Сохранение базы в файл
-with open('brokers_database.json', 'w', encoding='utf-8') as f:
-    json.dump(brokers_db, f, ensure_ascii=False, indent=4)
-
-# Функция для поиска брокера по названию (регистронезависимая)
-def find_broker(broker_name):
-    for broker in brokers_db['brokers']:
-        if broker_name.lower() in broker['name'].lower():
-            return broker
-    return None
-
-# Пример использования
-if __name__ == "__main__":
-    search_term = input("Введите название брокера: ")
-    result = find_broker(search_term)
-    
-    if result:
-        print(f"\nНазвание: {result['name']}")
-        print(f"Ссылка для отписки: {result['unsubscribe_link']}")
-        print(f"Email для отказа: {result['email']}")
-        print(f"Телефон: {result['phone']}")
-    else:
-        print("Брокер не найден в базе.")
